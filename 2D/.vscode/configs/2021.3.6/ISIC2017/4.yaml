@@ -1,0 +1,89 @@
+# general
+epochs: 300
+batch_size: 4
+num_workers: 4
+syncbn: True
+mc: True
+seed: 666
+save_checkpoint: 20
+
+# loss
+criterions: [['ce', 1], ['bclzwce1', 0.1]]  # check loss_utils.py for details
+class_weight: [1, 1]  # len(class_weight) should be equal to model.num_classes
+loss_temperature: 1
+      
+model:
+    mode: 'DeepLab_bcl' 
+    input_channel: 3
+    num_classes: 2
+    backbone: 'xception_bcl'  # xception, resnet, mobilenet, drn
+    output_stride: 16   # 16 or 8
+    freeze_bn: False 
+
+    # our method
+    layer_sample: [128, 64, 64, 8, 8, 8, 8, 8, 8, 8, 1, 8, 8, 8]
+    loss_layerchoice: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    distance_measure: 'cosine'
+    fea_weight_choice: 'receptive_field'
+    sample_strategy: 'stride'
+    bcl_layer_choice: [2,3,4] # 第几层加bcl loss
+    instance_dis: False
+
+
+    uncertainty_att_layerchoice: [0,0,0,0,0,  0,0,0,0,0,  1,1] # 9(encoder) + 5(aspp) + 2(decoder)
+
+
+dataset:
+    mode: 'ISIC2017'
+    root_path: './data/'
+    input_size: [512, 384, 3]
+    preload: False
+    aug: True
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+    modality: '2D'
+
+data_aug:
+    affine:
+      scale: [0.8, 1.2]
+      translate: [0.1, 0.1]
+      rotate: [-90, 90]
+      shear: [-20, 20]
+    flip: [0.5, 0.5]
+
+optm:
+    mode: 'adam'
+    use_larc: False
+    sgd:
+        base_lr: 0.1
+        final_lr: 0.00001
+        momentum: 0.9
+        wd: 0.00001
+    adam:
+        base_lr: 0.001
+        final_lr: 0.00001
+        wd: 0.00001
+    larc: 
+      trust_coefficient: 0.001
+      clip: False
+
+schd:
+    mode: 'cos'
+    step:
+      milestone: [30, 50, 80]  # epoch
+      decay_rate: 0.1
+    exp:
+      gamma: 0.97
+    cos:
+      start_warmup: 0
+      warmup_epochs: 2
+
+val:
+  start_val_epoch: 150
+  val_interval: 1
+  rank_metric: ['mIoU']  # main metric used for ranking
+  metric_used: ['mDice', 'mIoU', 'fwIoU', 'Acc', 'Acc_class']  # 'mDice', 'mIoU', 'fwIoU', 'Acc', 'Acc_class'
+  metric_mode: 'macro'  # 'macro or micro'
+  resize_option: 'resize_first'  # 'resize_first', 'resize_after'
+  resize_interpolation: 'bilinear'  # 'nearest', 'linear', 'bilinear', 'bicubic', 'trilinear', 'area'
+        
