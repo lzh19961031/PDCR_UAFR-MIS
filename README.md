@@ -5,7 +5,7 @@ Code for paper [DermClinical: Clinical-Oriented Dataset and Evaluation for Compu
 
 
 
-<div align="center"><img width="700" src="./images/framework.jpg"/></div>
+<div align="center"><img width="700" src="./images/dataset.jpg"/></div>
 
 
 ## Abstract:
@@ -54,7 +54,7 @@ number of categories in the trainset, but still leave the corresponding categori
 
 #### Ablation Studies for Models
 - Performance comparison of different filtering strategies as well as vanilla classification without filtering. 
-<div align="center"><img width="400" src="./images/UAFR_vis.jpg"/></div>
+<div align="center"><img width="400" src="./images/ab_models.jpg"/></div>
 
 
 
