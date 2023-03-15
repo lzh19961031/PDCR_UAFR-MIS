@@ -1,61 +1,53 @@
-# DermClinical: Clinical-Oriented Dataset and Evaluation for Computer-Aided Dermatological Diagnosis  
+# Contrastive and Selective Hidden Embeddings for Medical Image Segmentation  
 
 <!--- --->
-Code for paper [DermClinical: Clinical-Oriented Dataset and Evaluation for Computer-Aided Dermatological Diagnosis] 
+Code for paper [Contrastive and Selective Hidden Embeddings for Medical Image Segmentation](https://arxiv.org/). 
 
 
+> [Contrastive and Selective Hidden Embeddings for Medical Image Segmentation](https://arxiv.org/) \
+> Authors: Zihao Liu, Zhuowei Li, Zhiqiang Hu, Qing Xia, Ruiqin Xiong, Shaoting Zhang* and Tingting Jiang* \
 
-<div align="center"><img width="700" src="./images/dataset.jpg"/></div>
+Contact: liuzihao@sensetime.com. Feel free to ask any questions or discussions!
+
+<div align="center"><img width="700" src="./images/framework.jpg"/></div>
 
 
 ## Abstract:
 
-Dermatosis is one of the most common diseases and requires a heavy workload of diagnosis for its vast number of cases. Despite the development of computer-aided diagnosis, especially deep learning based computational methods, misalignment exists between evaluation of benchmark studies in the literature and expectation of work flows in real clinical practice. In this paper, we systematically address the problem from perspectives of dataset, metric, as well as evaluation schemes, collectively denoted as an evaluation
-framework DermClinical. Specifically, we build a so-far largest dataset, with a special focus on the long-tailed disease distribution by ensuring that all categories have sufficient samples for reliable evaluations. On this basis, we propose a novel metric which, as opposed to common classification based metrics, directly measures the labors saved by a computational model for doctors. Finally, we design a limited-data evaluation scheme to simulate situations when unseen categories are encountered in real practice. Extensive experiments are conducted to evaluate and compare current computational methods. The dataset, metric and code will be released to facilitate the research
+Medical image segmentation is fundamental and essential for the analysis of medical images. Although prevalent success has been achieved by convolutional neural networks (CNN), challenges are encountered in the domain of medical image analysis by two aspects: 1) lack of discriminative features to handle similar texture of distinct structures and 2) lack of selective features for potential blurred boundaries in medical images. In this paper, we extend the concept of contrastive learning (CL) to the segmentation task to learn more discriminative representation. Specifically, we propose a novel patch-dragsaw contrastive regularization (PDCR) to perform patch-level tugging and repulsing. In addition, a new structure, namely uncertaintyaware feature selection block (UAFS), is designed to address the potential high uncertainty regions in the feature maps and serves as a better feature selection. Our proposed method achieves state-of-the-art results across 8 public datasets from 6 domains. Besides, the method also demonstrates robustness in the limited-data scenario.
 
 
 ## Contribution: 
 
-- We build a new dataset on clinical images named “DermClinical-34k” from a variety of sources. The dataset, in a total of 34,671 images, is as far
-as we know the largest among existing ones. To tackle the problem of limited samples or even potentially unseen for some tail categories in long-tailed distribution, two strategies are applied. Firstly, we combine clinically related categories if any individual one does not have enough samples (which is defined in this work as less than 200 samples, but can be also set to a stricter standard as per needs). Secondly, we introduce the concept of the “unknown” category which, on the one hand, merges the rest sample insufficient categories, and on the other hand, offers the opportunity for models to deal with unseen categories: cases for unseen categories are expected to be classified into the “unknown” category. In the end, the dataset contains 56 categories as well as the “unknown” category, none of which has a sample capacity less than 200.
+- A new formulation of “pair” is proposed to improve the contrastive learning for supervised medical image segmentation, including the component and the relationship of “pair”. On this basis, a novel Patch-dragsaw contrastive regularization (PDCR) is proposed to regularize patch-level relations by contrastive constraints, which is implemented by two ways: Receptive-Field-based PDCR and Hierarchical PDCR.
 
-- We propose a novel metric named “Overall-Recall-above-Precision-K (OR-K)” that directly measures the labors saved by a computational model for doctors. The metric is derived from the conventional pipeline where the computational model serves for preliminary screening and conclusions are double-checked by doctors. Since model performance is not uniform across categories, a central question is to differentiate a reliable category which has an acceptable error rate by doctors against the unreliable category - only predictions for reliable categories are trusted and corresponding labors are saved. The
-differentiation is proposed to be based on the threshold over the precision for the category. In this paper, the threshold is set to be the same value K, but can be straightforwardly extended to varied per-category thresholds. Given the definition of the reliable and unreliable category, the metric then measures the saved labors by the ratio of samples predicted as reliable categories over all testing samples.
+- Uncertainty-aware feature selection (UAFS) module is designed to avoid the learning-attention shift problem in  medical image segmentation, which is caused by minority features with high uncertainty due to the characteristics of medical images, and select a better feature.
 
-- We design a limited-data evaluation scheme besides the ordinary full-data evaluation scheme. This is to simulate situations for meeting unseen categories in daily clinical usage. To this end, we manually remove a certain
-number of categories in the trainset, but still leave the corresponding categories in the testset. Note that we do not intend to investigate the zero-shot setting, but expect computational models to detect such out-of-scope cases and distinguish them as the “unknown” category instead of misclassification. In this way we aim at evaluation on the robustness of computational models when unseen categories are encountered in real practice.
-
-- We conduct extensive experiments on both off-the-shelf computational methods in the literature which are dedicatedly designed for dermatological image classification, as well as general-purpose classification backbones equipped with our filtering strategy as post-processing. The results demonstrate the independence of the proposed OR-K metric in characterizing complementary aspects from classification based metrics, the importance of the concept of “unknown” category for avoiding risky predictions and saving more labors for doctors, and the challenges for the application of computational models in clinical practice, especially by out-of-scope samples simulated by the limited-data evaluation scheme. Further methodology innovations and investigations are worthy in the future.
+- State-of-the-art results have been achieved across 8 diverse datasets from 6 domains. Furthermore, we substantiate the potential applicability of proposed methods under a limited data scenario by utilizing only 25% data to outperform the baseline methods with full data.
 
 
 ## Experiments
 
 
 ### Benchmark
+- Performance of our proposed method against comparative methods over eight different benchmark datasets. 
+<div align="center"><img width="700" src="./images/benchmark.jpg"/></div>
 
-#### Full-Data scheme
-- Performance comparison in the full-data evaluation scheme. 
-<div align="center"><img width="700" src="./images/benchmark_fulldata.jpg"/></div>
+### Ablation study for PDCR
+- PDCR against other similar designs.
+<div align="center"><img width="700" src="./images/PDCR_ablation.jpg"/></div>
 
-#### Limited data scheme
-- Performance comparison in the limited-data evaluation scheme.
-<div align="center"><img width="700" src="./images/benchmark_limited_data.jpg"/></div>
+### Ablation study for UAFR
+- UAFR against other similar designs .
+<div align="center"><img width="400" src="./images/UAFR_ablation.jpg"/></div>
 
-### Investigations
-#### Correlations between OR-K and Other Metrics
-- Scatter diagrams to show the correlations between OR-K and F1, Mauc, Acc respectively. Correlation coefficient is also calculated.
-<div align="center"><img width="400" src="./images/ORKandothermetric.jpg"/></div>
+### Visualization results for the proposed modules 
 
-#### Influence of Setting of K
-- Investigation in the variation of the OR-K values with respect to different threshold K. 
-<div align="center"><img width="400" src="./images/differentK.jpg"/></div>
+- For PDCR, we visualize the distribution for various classes. 
+<div align="center"><img width="400" src="./images/PDCR_vis.jpg"/></div>
 
-
-
-#### Ablation Studies for Models
-- Performance comparison of different filtering strategies as well as vanilla classification without filtering. 
-<div align="center"><img width="400" src="./images/ab_models.jpg"/></div>
-
+- For UAFR, we visualize the uncertainty map. 
+<div align="center"><img width="400" src="./images/UAFR_vis.jpg"/></div>
 
 
 ## Usage: 
@@ -70,26 +62,47 @@ number of categories in the trainset, but still leave the corresponding categori
   * **16 NVIDIA GPUs**
 
 #### Preparing Data
-1. Download DermClinical-34k. Then use our DermClinical-34k dataset as the default structure:
+1. Download each dataset: 
+
+  * **ISIC2016: https://challenge.isic-archive.com/data/**
+  * **ISIC2017: https://challenge.isic-archive.com/data/**
+  * **PH2: https://www.fc.up.pt/addi/ph2%20database.html**
+  * **MC: https://www.kaggle.com/datasets/raddar/tuberculosis-chest-xrays-montgomery**
+  * **DigestPath: https://digestpath2019.grand-challenge.org/**
+
+2. Please organize each dataset as the following structure:
 
 ```
 data
-└── Acne_Vulgaris(large)
-    └── 0.jpg
-    └── 1.jpg
-    └── ...
-└── Background
-    └── 0.jpg
-    └── 1.jpg
-    └── ...
+└── ISIC2016
+    ├── train
+    |   ├── img
+            └── ISIC_0000000.jpg
+            └── ISIC_0000001.jpg 
+            └── ...
+        ├── mask_jpg
+            └── ISIC_0000000_Segmentation.jpg
+            └── ISIC_0000001_Segmentation.jpg
+            └── ...
+    ├── test
+    |   ├── img
+            └── ISIC_0000003.jpg
+            └── ISIC_0000012.jpg 
+            └── ...
+        ├── mask_jpg
+            └── ISIC_0000003_Segmentation.jpg
+            └── ISIC_0000012_Segmentation.jpg
+            └── ...
+└── ISIC2017
+└── MC
 ...
 ```
 
-#### Training and validation
+#### Training
 
-Run "run_training.py" for training or validation (using the *.yaml* configuration files in `./configs/`).
+Run "run_training.py" for training (using the *.yaml* configuration files in `./configs/`).
 
-Here is an example for resnet101 backbone: 
+Here is an example for ISIC2016 dataset: 
 ```   
 # General setting
 epochs: 300                                       # the number of epoch for training 
@@ -99,32 +112,49 @@ syncbn: True
 mc: True
 seed: 666
 
-# Loss function
-criterions: [['ce', 1]]         
+# THe information of contrastive loss
+# if adopt H-PDCR in encoder, decoder and cross-layer:
+criterions: [['ce', 1], ['encoder_patchseries', 0.1], ['decoder_patchseries', 0.01], ['multi_layer_patchseries', 0.01]]                                                 
+class_weight: [1, 1]           
 loss_temperature: 1
 
 # The information of model      
 model:
-    mode: 'resnet101'                                    # resnet101
-    baseline_discard_only_low_confidence: False          # threshold for highest category
-    baseline_discard_only_low_confidence_threshold: 0.9  
-
-    baseline_discard_unknown: False                      # threshold for unknown category
-    baseline_discard_unknown_threshold: 0.8
-
+    mode: 'DeepLab_bcl_att2'                      # DeeplabV3+
     input_channel: 3
-    num_classes: 57                                      #number of category
+    num_classes: 2                                # number of segmentation class
+    backbone: 'xception_bcl_att2'                 # xception-net as encoder
+    output_stride: 16   
+    freeze_bn: False 
 
-    precision_threshold: 0.9                             #K
-    recall_threshold: 0.6
+    # our method
+    layer_sample: [128, 64, 32, 8, 8, 8, 8]       # sample number of vectors for each layer(N)
+    loss_layerchoice: [1, 1, 1, 1, 1, 1, 1]       # whether adopt PDCR on this layer, 1 denotes adopt  
+
+    distance_measure: 'cosine'                    # cosine similarity for each two vectors 
+    fea_weight_choice: 'receptive_field'          
+    sample_strategy: 'stride'
+    bcl_layer_choice: [2,3]                       # which layer to adopt PDCR
+
+    bcl_multi_layer_choice: [2,3]                 # for cross-layer, which layer to adopt PDCR 
+    layer_sample_multilayer: [32, 32, 32, 32, 32] # for cross-layer, sample number of vectors for each layer(N)
+
+    patchnumber: 3                                # the number of patches in the patch series of H-PDCR
+    patchsize: [5, 7, 9]                          # the size of each patch 
+    similarityfirst_encoder: True                 # calculate the similarity of each two patch first 
+    similarityfirst_decoder: True                 # calculate the similarity of each two patch first   
+    similarityfirst_multi: True                   # calculate the similarity of each two patch first 
+    patchforeground_weight: [1.0, 1.0, 1.0]       # weight to calculate the loss for each size of patch
+
+    uncertainty_att_layerchoice: [1,1,1,1,1,  0,0,0,0,0,  1,1]  # adopt UAFR in which layer 
 
 # The information of dataset
 dataset:
-    mode: 'Recollected_dataset'
+    mode: 'ISIC2016'
     root_path: './data/'
-    input_size: [224, 224, 3]
+    input_size: [512, 512, 3]
     preload: False
-    aug: False
+    aug: True
     mean: [0.485, 0.456, 0.406]
     std: [0.229, 0.224, 0.225]
     modality: '2D'
@@ -140,12 +170,37 @@ data_aug:
 
 # The information of validation
 test:
-  rank_metric: ['overall_recall_at_precision_K_top1']  # main metric used for ranking
-  metric_used: ["overall_recall_at_precision_K_top1_test", "pre", "rec", "spe", "f1", "geo", "iba", "sup"]  # 'mDice', 'mIoU', 'fwIoU', 'Acc', 'Acc_class'
+  rank_metric: ['mIoU']  
+  metric_used: ['mDice', 'mIoU', 'Acc']  
+  resize_option: 'resize_first'  
+  resize_interpolation: 'bilinear'  
 ```
 
 #### Testing
 
 Similar with training, run "run_test.py" (using the *.yaml* configuration files in `./configs/`).
 
+
+### 3D experiments:
+
+For the training and testing of 3D experiments, please follow the instruction of nnUNet: https://github.com/MIC-DKFZ/nnUNet. 
+
+Our proposed two modules (PDCR and UAFR) in nnUNet are in the following files:
+
+PDCR: `./nnunet/training/loss_functions/deep_supervision.py/`
+
+UAFR: `./nnunet/network_architecture/generic_UNet.py/`
+
+
+
+# Citation
+
+```
+@article{CSMIS,
+  title={Contrastive and Selective Hidden Embeddings for Medical Image Segmentation},
+  author={Liu, Zihao and Li, Zhuowei and Hu, Zhiqiang and Xia, Qing and Xiong, Ruiqin and Zhang, Shaoting and Jiang, Tingting}, 
+  journal={arXiv preprint},
+  year={2022}
+}
+```
 
