@@ -1,4 +1,4 @@
-# Contrastive and Selective Hidden Embeddings for Medical Image Segmentation  
+# DermClinical: Clinical-Oriented Dataset and Evaluation for Computer-Aided Dermatological Diagnosis  
 
 <!--- --->
 Code for paper [DermClinical: Clinical-Oriented Dataset and Evaluation for Computer-Aided Dermatological Diagnosis] 
